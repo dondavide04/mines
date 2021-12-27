@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mines/routes/game/game.dart';
 
 class Box extends StatefulWidget {
-  final int content;
+  final Cell cell;
   final double size = 32;
 
-  const Box({Key? key, required this.content}) : super(key: key);
+  const Box({Key? key, required this.cell}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BoxState();
@@ -27,7 +28,9 @@ class _BoxState extends State<Box> {
       child: SizedBox(
         child: _isVisible
             ? Center(
-                child: Text(widget.content.toString()),
+                child: Text(widget.cell.isMine
+                    ? 'mine'
+                    : widget.cell.aroundMines.toString()),
               )
             : Container(
                 // decoration: BoxDecoration(
