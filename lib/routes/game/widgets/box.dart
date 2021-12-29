@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mines/routes/game/game.dart';
+import 'package:mines/routes/game/widgets/cell.dart';
 
 class Box extends StatefulWidget {
-  final Cell cell;
+  final CellWidget content;
+  final int xCoord;
+  final int yCoord;
   final double size = 32;
+  final Function(int xCoord, int yCoord) onTap;
 
-  const Box({Key? key, required this.cell}) : super(key: key);
+  const Box(
+      {Key? key,
+      required this.content,
+      required this.xCoord,
+      required this.yCoord,
+      required this.onTap})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BoxState();
@@ -14,8 +23,9 @@ class Box extends StatefulWidget {
 class _BoxState extends State<Box> {
   bool _isVisible = false;
 
-  _handleTap() {
+  _onTap() {
     if (!_isVisible) {
+      widget.onTap(widget.xCoord, widget.yCoord);
       setState(() {
         _isVisible = true;
       });
@@ -28,9 +38,7 @@ class _BoxState extends State<Box> {
       child: SizedBox(
         child: _isVisible
             ? Center(
-                child: Text(widget.cell.isMine
-                    ? 'mine'
-                    : widget.cell.aroundMines.toString()),
+                child: widget.content,
               )
             : Container(
                 // decoration: BoxDecoration(
@@ -41,7 +49,7 @@ class _BoxState extends State<Box> {
         width: widget.size,
         height: widget.size,
       ),
-      onTap: _isVisible ? null : _handleTap,
+      onTap: _isVisible ? null : _onTap,
     );
   }
 }

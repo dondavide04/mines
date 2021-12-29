@@ -1,67 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mines/routes/game/box.dart';
+import 'package:mines/routes/game/utils/mkGameBoard.dart';
+import 'package:mines/routes/game/widgets/box.dart';
 import 'package:collection/collection.dart';
+import 'package:mines/routes/game/widgets/cell.dart';
 
 const gameSize = 9;
 const totalMines = 15;
-
-class Cell {
-  final bool isMine;
-  final int aroundMines;
-
-  Cell.mine()
-      : isMine = true,
-        aroundMines = 0;
-  Cell.number(this.aroundMines) : isMine = false;
-}
-
-List<List<Cell>> _mkGameBoard() {
-  final flatMines = List.filled(totalMines, 1, growable: true);
-  flatMines.addAll(List.filled((gameSize * gameSize) - totalMines, 0));
-  flatMines.shuffle();
-  final flatBoard = flatMines
-      .mapIndexed((i, e) => e == 1
-          ? Cell.mine()
-          : Cell.number([
-              i % gameSize == 0
-                  ? [
-                      i - gameSize,
-                      i - gameSize + 1,
-                      i + 1,
-                      i + gameSize,
-                      i + gameSize + 1
-                    ]
-                  : i % gameSize == (gameSize - 1)
-                      ? [
-                          i - gameSize,
-                          i - gameSize - 1,
-                          i - 1,
-                          i + gameSize,
-                          i + gameSize - 1
-                        ]
-                      : [
-                          i - gameSize - 1,
-                          i - gameSize,
-                          i - gameSize + 1,
-                          i - 1,
-                          i + 1,
-                          i + gameSize - 1,
-                          i + gameSize,
-                          i + gameSize + 1
-                        ],
-            ].expand((e) => e).fold(
-              0,
-              (acc, value) => value < flatMines.length && value > 0
-                  ? acc + flatMines[value]
-                  : acc)))
-      .toList();
-
-  return List.generate(gameSize, (index) {
-    final start = index * gameSize;
-    final end = start + gameSize;
-    return flatBoard.sublist(start, end);
-  }, growable: false);
-}
 
 class Game extends StatefulWidget {
   const Game({Key? key}) : super(key: key);
@@ -71,9 +15,21 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  final List<List<Cell>> board;
+  List<List<Cell>>? board;
+  bool isStarted = false;
 
-  _GameState() : board = _mkGameBoard();
+  _onTapCell(int xCoord, int yCoord) {
+    if (!isStarted) {
+      setState(() {
+        isStarted = true;
+        board = mkGameBoard(
+            gameSize: gameSize,
+            totalMines: totalMines,
+            xFirst: xCoord,
+            yFirst: yCoord);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +45,19 @@ class _GameState extends State<Game> {
         child: Wrap(
           direction: Axis.vertical,
           spacing: 8,
-          children: board
-              .map(
-                (row) => Wrap(
+          children: (board ??
+                  List.filled(gameSize, List.filled(gameSize, Cell.number(0))))
+              .mapIndexed(
+                (rowIndex, row) => Wrap(
                   spacing: 8,
-                  children: row.map((e) => Box(cell: e)).toList(),
+                  children: row
+                      .mapIndexed((colIndex, cell) => Box(
+                            content: CellWidget(cell: cell),
+                            xCoord: rowIndex,
+                            yCoord: colIndex,
+                            onTap: _onTapCell,
+                          ))
+                      .toList(),
                 ),
               )
               .toList(),
