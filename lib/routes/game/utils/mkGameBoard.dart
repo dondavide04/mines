@@ -1,6 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
 
+class MatrixIndexes {
+  final int x;
+  final int y;
+
+  const MatrixIndexes(this.x, this.y);
+}
+
 extension Matrix<T> on List<List<T>> {
   List<List<T>> around({required int x, required int y}) =>
       whereIndexed((rowIndex, _) => rowIndex <= (x + 1) && rowIndex >= (x - 1))
@@ -9,6 +16,11 @@ extension Matrix<T> on List<List<T>> {
                   (colIndex, _) => colIndex <= (y + 1) && colIndex >= (y - 1))
               .toList())
           .toList();
+
+  List<MatrixIndexes> aroundIndexes({required int x, required int y}) =>
+      mapIndexed((rowIndex, col) => col
+          .mapIndexed((colIndex, _) => MatrixIndexes(rowIndex, colIndex))
+          .toList()).toList().around(x: x, y: y).flatten().toList();
 
   Iterable<T> flatten() => expand((element) => element);
 }
