@@ -25,7 +25,27 @@ class _GameState extends State<Game> {
   List<List<CellWithVisibility>>? board;
   bool isStarted = false;
 
+  AlertDialog _endDialog(String title) => AlertDialog(
+        title: Text(title),
+        actions: [
+          TextButton(
+              child: const Text('back'),
+              onPressed: () =>
+                  Navigator.popUntil(context, (route) => route.isFirst)),
+          const TextButton(
+            child: Text('restart'),
+            onPressed: null,
+          )
+        ],
+      );
+
   _checkCell(int xCoord, int yCoord) {
+    if (board![xCoord][yCoord].cell.isMine) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => _endDialog('You lost'));
+    }
     board![xCoord][yCoord].isVisible = true;
     if (board![xCoord][yCoord].cell.aroundMines == 0) {
       board!.aroundIndexes(x: xCoord, y: yCoord).forEach((coord) {

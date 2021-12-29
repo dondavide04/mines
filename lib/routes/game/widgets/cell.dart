@@ -6,7 +6,7 @@ class Cell {
 
   Cell.mine()
       : isMine = true,
-        aroundMines = 0;
+        aroundMines = -1;
   Cell.number(this.aroundMines) : isMine = false;
 }
 
