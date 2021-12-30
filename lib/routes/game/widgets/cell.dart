@@ -16,9 +16,7 @@ class CellWidget extends StatelessWidget {
   const CellWidget({Key? key, required this.cell}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Text(cell.isMine
-      ? 'mine'
-      : cell.aroundMines == 0
-          ? ''
-          : cell.aroundMines.toString());
+  Widget build(BuildContext context) => cell.isMine
+      ? Image.asset('assets/images/bomb.png')
+      : Text(cell.aroundMines == 0 ? '' : cell.aroundMines.toString());
 }

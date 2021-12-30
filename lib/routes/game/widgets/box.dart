@@ -23,7 +23,8 @@ class Box extends StatelessWidget {
     return InkWell(
       child: SizedBox(
         child: isVisible
-            ? Center(
+            ? Container(
+                padding: const EdgeInsets.all(8),
                 child: content,
               )
             : Container(

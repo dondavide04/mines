@@ -11,6 +11,8 @@ class CellWithVisibility {
   final Cell cell;
   bool isVisible = false;
 
+  bool isNotVisible() => !isVisible;
+
   CellWithVisibility(this.cell);
 }
 
@@ -32,6 +34,16 @@ class _GameState extends State<Game> {
     });
   }
 
+  void _win() => showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => _endDialog('You won'));
+
+  void _loose() => showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => _endDialog('You lost'));
+
   AlertDialog _endDialog(String title) => AlertDialog(
         title: Text(title),
         actions: [
@@ -50,19 +62,26 @@ class _GameState extends State<Game> {
       );
 
   void _checkCell(int xCoord, int yCoord) {
+    // check loosing condition
     if (board![xCoord][yCoord].cell.isMine) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => _endDialog('You lost'));
+      _loose();
     }
+
+    // make visible
     board![xCoord][yCoord].isVisible = true;
+    // check around cells
     if (board![xCoord][yCoord].cell.aroundMines == 0) {
       board!.aroundIndexes(x: xCoord, y: yCoord).forEach((coord) {
         if (!board![coord.x][coord.y].isVisible) {
           _checkCell(coord.x, coord.y);
         }
       });
+    }
+
+    // check winning condition
+    if (board!.flatten().where((cell) => cell.isNotVisible()).length ==
+        totalMines) {
+      _win();
     }
   }
 
