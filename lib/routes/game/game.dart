@@ -25,6 +25,13 @@ class _GameState extends State<Game> {
   List<List<CellWithVisibility>>? board;
   bool isStarted = false;
 
+  void _restart() {
+    setState(() {
+      isStarted = false;
+      board = null;
+    });
+  }
+
   AlertDialog _endDialog(String title) => AlertDialog(
         title: Text(title),
         actions: [
@@ -32,14 +39,17 @@ class _GameState extends State<Game> {
               child: const Text('back'),
               onPressed: () =>
                   Navigator.popUntil(context, (route) => route.isFirst)),
-          const TextButton(
-            child: Text('restart'),
-            onPressed: null,
+          TextButton(
+            child: const Text('restart'),
+            onPressed: () {
+              _restart();
+              Navigator.pop(context);
+            },
           )
         ],
       );
 
-  _checkCell(int xCoord, int yCoord) {
+  void _checkCell(int xCoord, int yCoord) {
     if (board![xCoord][yCoord].cell.isMine) {
       showDialog(
           barrierDismissible: false,
@@ -56,7 +66,7 @@ class _GameState extends State<Game> {
     }
   }
 
-  _onTapCell(int xCoord, int yCoord) {
+  void _onTapCell(int xCoord, int yCoord) {
     setState(() {
       if (!isStarted) {
         board = mkGameBoard(
