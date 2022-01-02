@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
 
-class Box extends StatefulWidget {
+enum BoxStatus { visible, notVisible, flagged }
+
+class Box extends StatelessWidget {
   final CellWidget content;
   final int xCoord;
   final int yCoord;
   final double size = 32;
-  final bool isVisible;
-  final Function(int xCoord, int yCoord) onTap;
+  final BoxStatus status;
+  final Function(int xCoord, int yCoord, BoxStatus status) onTap;
+  final Function(int xCoord, int yCoord, BoxStatus status) onLongPress;
 
   const Box(
       {Key? key,
@@ -15,44 +18,33 @@ class Box extends StatefulWidget {
       required this.xCoord,
       required this.yCoord,
       required this.onTap,
-      this.isVisible = false})
+      required this.onLongPress,
+      this.status = BoxStatus.notVisible})
       : super(key: key);
-
-  @override
-  State<Box> createState() => _BoxState();
-}
-
-class _BoxState extends State<Box> {
-  bool _isFlagged = false;
-
-  void _toggleFlag() => setState(() {
-        _isFlagged = !_isFlagged;
-      });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       child: SizedBox(
-        child: widget.isVisible
+        child: status == BoxStatus.visible
             ? Container(
                 padding: const EdgeInsets.all(8),
-                child: widget.content,
+                child: content,
               )
             : Container(
                 // decoration: BoxDecoration(
                 //   borderRadius: BorderRadius.circular(20),
                 // ),
                 color: Theme.of(context).primaryColorLight,
-                child:
-                    _isFlagged ? Image.asset('assets/images/flag.png') : null,
+                child: status == BoxStatus.flagged
+                    ? Image.asset('assets/images/flag.png')
+                    : null,
               ),
-        width: widget.size,
-        height: widget.size,
+        width: size,
+        height: size,
       ),
-      onTap: () => _isFlagged
-          ? _toggleFlag()
-          : widget.onTap(widget.xCoord, widget.yCoord),
-      onLongPress: _toggleFlag,
+      onTap: () => onTap(xCoord, yCoord, status),
+      onLongPress: () => onLongPress(xCoord, yCoord, status),
     );
   }
 }

@@ -7,13 +7,16 @@ import 'package:mines/routes/game/widgets/cell.dart';
 const gameSize = 9;
 const totalMines = 15;
 
-class CellWithVisibility {
+class StatefulCell {
   final Cell cell;
-  bool isVisible = false;
+  BoxStatus status = BoxStatus.notVisible;
 
-  bool isNotVisible() => !isVisible;
+  bool isNotVisible() => status != BoxStatus.visible;
+  void setVisible() => status = BoxStatus.visible;
+  void setNotVisible() => status = BoxStatus.notVisible;
+  void setFlagged() => status = BoxStatus.flagged;
 
-  CellWithVisibility(this.cell);
+  StatefulCell(this.cell);
 }
 
 class Game extends StatefulWidget {
@@ -24,12 +27,10 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  List<List<CellWithVisibility>>? board;
-  bool isStarted = false;
+  List<List<StatefulCell>>? board;
 
   void _restart() {
     setState(() {
-      isStarted = false;
       board = null;
     });
   }
@@ -68,11 +69,11 @@ class _GameState extends State<Game> {
     }
 
     // make visible
-    board![xCoord][yCoord].isVisible = true;
+    board![xCoord][yCoord].setVisible();
     // check around cells
     if (board![xCoord][yCoord].cell.aroundMines == 0) {
       board!.aroundIndexes(x: xCoord, y: yCoord).forEach((coord) {
-        if (!board![coord.x][coord.y].isVisible) {
+        if (board![coord.x][coord.y].isNotVisible()) {
           _checkCell(coord.x, coord.y);
         }
       });
@@ -85,21 +86,31 @@ class _GameState extends State<Game> {
     }
   }
 
-  void _onTapCell(int xCoord, int yCoord) {
-    setState(() {
-      if (!isStarted) {
-        board = mkGameBoard(
+  void _onTapCell(int xCoord, int yCoord, BoxStatus status) => setState(() {
+        board ??= mkGameBoard(
                 gameSize: gameSize,
                 totalMines: totalMines,
                 xFirst: xCoord,
                 yFirst: yCoord)
-            .map((row) => row.map((cell) => CellWithVisibility(cell)).toList())
+            .map((row) => row.map((cell) => StatefulCell(cell)).toList())
             .toList();
-        isStarted = true;
-      }
-      _checkCell(xCoord, yCoord);
-    });
-  }
+        if (status == BoxStatus.flagged) {
+          board![xCoord][yCoord].setNotVisible();
+        } else {
+          _checkCell(xCoord, yCoord);
+        }
+      });
+
+  void _onLongPressCell(int xCoord, int yCoord, BoxStatus status) =>
+      setState(() {
+        if (board == null) {
+          _onTapCell(xCoord, yCoord, status);
+        } else if (status == BoxStatus.notVisible) {
+          board![xCoord][yCoord].setFlagged();
+        } else if (status == BoxStatus.flagged) {
+          board![xCoord][yCoord].setNotVisible();
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -117,19 +128,23 @@ class _GameState extends State<Game> {
           spacing: 8,
           children: (board ??
                   List.filled(
+                    gameSize,
+                    List.filled(
                       gameSize,
-                      List.filled(
-                          gameSize, CellWithVisibility(Cell.number(0)))))
+                      StatefulCell(Cell.number(0)),
+                    ),
+                  ))
               .mapIndexed(
                 (rowIndex, row) => Wrap(
                   spacing: 8,
                   children: row
-                      .mapIndexed((colIndex, visibleCell) => Box(
-                            content: CellWidget(cell: visibleCell.cell),
+                      .mapIndexed((colIndex, statefulCell) => Box(
+                            content: CellWidget(cell: statefulCell.cell),
                             xCoord: rowIndex,
                             yCoord: colIndex,
                             onTap: _onTapCell,
-                            isVisible: visibleCell.isVisible,
+                            onLongPress: _onLongPressCell,
+                            status: statefulCell.status,
                           ))
                       .toList(),
                 ),
