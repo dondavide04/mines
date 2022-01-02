@@ -63,26 +63,23 @@ class _GameState extends State<Game> {
       );
 
   void _checkCell(int xCoord, int yCoord) {
-    // check loosing condition
-    if (board![xCoord][yCoord].cell.isMine) {
-      _loose();
-    }
-
     // make visible
     board![xCoord][yCoord].setVisible();
-    // check around cells
-    if (board![xCoord][yCoord].cell.aroundMines == 0) {
+
+    if (board![xCoord][yCoord].cell.isMine) {
+      // check loosing condition
+      _loose();
+    } else if (board!.flatten().where((cell) => cell.isNotVisible()).length ==
+        totalMines) {
+      // check winning condition
+      _win();
+    } else if (board![xCoord][yCoord].cell.aroundMines == 0) {
+      // check around cells
       board!.aroundIndexes(x: xCoord, y: yCoord).forEach((coord) {
         if (board![coord.x][coord.y].isNotVisible()) {
           _checkCell(coord.x, coord.y);
         }
       });
-    }
-
-    // check winning condition
-    if (board!.flatten().where((cell) => cell.isNotVisible()).length ==
-        totalMines) {
-      _win();
     }
   }
 
