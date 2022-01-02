@@ -12,6 +12,7 @@ class StatefulCell {
   BoxStatus status = BoxStatus.notVisible;
 
   bool isNotVisible() => status != BoxStatus.visible;
+  bool isFlagged() => status == BoxStatus.flagged;
   void setVisible() => status = BoxStatus.visible;
   void setNotVisible() => status = BoxStatus.notVisible;
   void setFlagged() => status = BoxStatus.flagged;
@@ -116,6 +117,35 @@ class _GameState extends State<Game> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Theme.of(context).primaryColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                Container(
+                    child: Image.asset('assets/images/bomb.png'),
+                    height: 32,
+                    padding: const EdgeInsets.all(8)),
+                Text(totalMines.toString())
+              ],
+            ),
+            const SizedBox(width: 32),
+            Row(
+              children: [
+                Container(
+                    child: Image.asset('assets/images/flag.png'),
+                    height: 32,
+                    padding: const EdgeInsets.all(4)),
+                Text(board
+                        ?.flatten()
+                        .where((cell) => cell.isFlagged())
+                        .length
+                        .toString() ??
+                    '0')
+              ],
+            ),
+          ],
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.all(8),
