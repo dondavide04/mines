@@ -18,5 +18,7 @@ class CellWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => cell.isMine
       ? Image.asset('assets/images/bomb.png')
-      : Text(cell.aroundMines == 0 ? '' : cell.aroundMines.toString());
+      : Center(
+          child: Text(cell.aroundMines == 0 ? '' : cell.aroundMines.toString()),
+        );
 }
