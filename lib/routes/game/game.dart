@@ -4,7 +4,7 @@ import 'package:mines/routes/game/widgets/box.dart';
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
 
-const gameSize = 9;
+const gameSize = 10;
 const totalMines = 15;
 
 class StatefulCell {
@@ -148,35 +148,38 @@ class _GameState extends State<Game> {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
         alignment: Alignment.center,
-        child: Wrap(
-          direction: Axis.vertical,
-          spacing: 8,
-          children: (board ??
-                  List.filled(
-                    gameSize,
+        child: InteractiveViewer(
+          constrained: false,
+          child: Wrap(
+            direction: Axis.vertical,
+            spacing: 8,
+            children: (board ??
                     List.filled(
                       gameSize,
-                      StatefulCell(Cell.number(0)),
-                    ),
-                  ))
-              .mapIndexed(
-                (rowIndex, row) => Wrap(
-                  spacing: 8,
-                  children: row
-                      .mapIndexed((colIndex, statefulCell) => Box(
-                            content: CellWidget(cell: statefulCell.cell),
-                            xCoord: rowIndex,
-                            yCoord: colIndex,
-                            onTap: _onTapCell,
-                            onLongPress: _onLongPressCell,
-                            status: statefulCell.status,
-                          ))
-                      .toList(),
-                ),
-              )
-              .toList(),
+                      List.filled(
+                        gameSize,
+                        StatefulCell(Cell.number(0)),
+                      ),
+                    ))
+                .mapIndexed(
+                  (rowIndex, row) => Wrap(
+                    spacing: 8,
+                    children: row
+                        .mapIndexed((colIndex, statefulCell) => Box(
+                              content: CellWidget(cell: statefulCell.cell),
+                              xCoord: rowIndex,
+                              yCoord: colIndex,
+                              onTap: _onTapCell,
+                              onLongPress: _onLongPressCell,
+                              status: statefulCell.status,
+                            ))
+                        .toList(),
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
