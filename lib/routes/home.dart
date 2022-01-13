@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mines/routes.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class Home extends StatelessWidget {
         heightFactor: double.infinity,
         child: ElevatedButton(
           child: const Text('Start'),
-          onPressed: () => Navigator.pushNamed(context, '/game'),
+          onPressed: () => Navigator.pushNamed(context, Routes.game),
         ),
       ),
     );
