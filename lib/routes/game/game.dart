@@ -151,34 +151,40 @@ class _GameState extends State<Game> {
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
         alignment: Alignment.center,
         child: InteractiveViewer(
+          scaleEnabled: false,
           constrained: false,
-          child: Wrap(
-            direction: Axis.vertical,
-            spacing: 8,
-            children: (board ??
-                    List.filled(
-                      gameSize,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                border: Border.all(color: Theme.of(context).primaryColor)),
+            child: Wrap(
+              direction: Axis.vertical,
+              spacing: 8,
+              children: (board ??
                       List.filled(
                         gameSize,
-                        StatefulCell(Cell.number(0)),
-                      ),
-                    ))
-                .mapIndexed(
-                  (rowIndex, row) => Wrap(
-                    spacing: 8,
-                    children: row
-                        .mapIndexed((colIndex, statefulCell) => Box(
-                              content: CellWidget(cell: statefulCell.cell),
-                              xCoord: rowIndex,
-                              yCoord: colIndex,
-                              onTap: _onTapCell,
-                              onLongPress: _onLongPressCell,
-                              status: statefulCell.status,
-                            ))
-                        .toList(),
-                  ),
-                )
-                .toList(),
+                        List.filled(
+                          gameSize,
+                          StatefulCell(Cell.number(0)),
+                        ),
+                      ))
+                  .mapIndexed(
+                    (rowIndex, row) => Wrap(
+                      spacing: 8,
+                      children: row
+                          .mapIndexed((colIndex, statefulCell) => Box(
+                                content: CellWidget(cell: statefulCell.cell),
+                                xCoord: rowIndex,
+                                yCoord: colIndex,
+                                onTap: _onTapCell,
+                                onLongPress: _onLongPressCell,
+                                status: statefulCell.status,
+                              ))
+                          .toList(),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ),
       ),
