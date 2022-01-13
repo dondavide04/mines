@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mines/home.dart';
+import 'package:mines/routes/game/game.dart';
+import 'package:mines/routes/home.dart';
 
 void main() {
   runApp(const App());
@@ -13,7 +14,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Mines',
       initialRoute: '/',
-      routes: {'/': (_) => const Home()},
+      routes: {
+        '/': (_) => const Home(),
+        '/game': (_) => const Game(),
+      },
     );
   }
 }
