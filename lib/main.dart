@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines/routes.dart';
 import 'package:mines/routes/game/game.dart';
-import 'package:mines/routes/home.dart';
+import 'package:mines/routes/home/home.dart';
 
 void main() {
   runApp(const App());
