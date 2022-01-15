@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mines/routes.dart';
+import 'package:mines/routes/home/widgets/settingsDialog.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,7 +13,11 @@ class Home extends StatelessWidget {
         heightFactor: double.infinity,
         child: ElevatedButton(
           child: const Text('Start'),
-          onPressed: () => Navigator.pushNamed(context, Routes.game),
+          onPressed: () => showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => const SettingsDialog())
+              .then((value) => print(value)),
         ),
       ),
     );
