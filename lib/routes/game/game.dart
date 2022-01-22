@@ -4,9 +4,6 @@ import 'package:mines/routes/game/widgets/box.dart';
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
 
-const gameSize = 10;
-const totalMines = 15;
-
 class StatefulCell {
   final Cell cell;
   BoxStatus status = BoxStatus.notVisible;
@@ -21,7 +18,11 @@ class StatefulCell {
 }
 
 class Game extends StatefulWidget {
-  const Game({Key? key}) : super(key: key);
+  final int gameSize;
+  final int totalMines;
+
+  const Game({Key? key, required this.gameSize, required this.totalMines})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _GameState();
@@ -71,7 +72,7 @@ class _GameState extends State<Game> {
       // check loosing condition
       _loose();
     } else if (board!.flatten().where((cell) => cell.isNotVisible()).length ==
-        totalMines) {
+        widget.totalMines) {
       // check winning condition
       _win();
     } else if (board![xCoord][yCoord].cell.aroundMines == 0) {
@@ -86,8 +87,8 @@ class _GameState extends State<Game> {
 
   void _onTapCell(int xCoord, int yCoord, BoxStatus status) => setState(() {
         board ??= mkGameBoard(
-                gameSize: gameSize,
-                totalMines: totalMines,
+                gameSize: widget.gameSize,
+                totalMines: widget.totalMines,
                 xFirst: xCoord,
                 yFirst: yCoord)
             .map((row) => row.map((cell) => StatefulCell(cell)).toList())
@@ -126,7 +127,7 @@ class _GameState extends State<Game> {
                     child: Image.asset('assets/images/bomb.png'),
                     height: 32,
                     padding: const EdgeInsets.all(8)),
-                Text(totalMines.toString())
+                Text(widget.totalMines.toString())
               ],
             ),
             const SizedBox(width: 32),
@@ -162,9 +163,9 @@ class _GameState extends State<Game> {
               spacing: 8,
               children: (board ??
                       List.filled(
-                        gameSize,
+                        widget.gameSize,
                         List.filled(
-                          gameSize,
+                          widget.gameSize,
                           StatefulCell(Cell.number(0)),
                         ),
                       ))

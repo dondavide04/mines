@@ -5,15 +5,6 @@ class Settings {
   final int mines;
 
   Settings(this.size, this.mines);
-  Settings.easy()
-      : size = 8,
-        mines = 6;
-  Settings.medium()
-      : size = 8,
-        mines = 13;
-  Settings.hard()
-      : size = 8,
-        mines = 20;
 }
 
 enum Difficulties { easy, medium, hard }
@@ -28,29 +19,47 @@ class SettingsDialog extends StatefulWidget {
 class _SettingsDialogState extends State<SettingsDialog> {
   int size = 8;
   int mines = 13;
+  get maxMines => (size * size * 30 / 100).round();
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-          title: const Text('Choose settings'),
-          content: Column(
-            children: [
-              Text('Size = $size'),
-              Slider(
-                value: size.toDouble(),
-                onChanged: (size) => setState(() {
-                  this.size = size.toInt();
-                }),
-                min: 5,
-                max: 15,
-                divisions: 10,
-              )
-            ],
-          ),
-          actions: [
-            ElevatedButton(
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: const Text('Choose settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Size = $size'),
+            Slider(
+              value: size.toDouble(),
+              onChanged: (size) => setState(() {
+                this.size = size.toInt();
+                if (mines > maxMines) {
+                  (mines = maxMines);
+                }
+              }),
+              min: 5,
+              max: 15,
+            ),
+            Text('Mines = $mines'),
+            Slider(
+              value: mines.toDouble(),
+              onChanged: (mines) => setState(() {
+                this.mines = mines.toInt();
+              }),
+              min: 1,
+              max: maxMines.toDouble(),
+            )
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context, '');
+                  Navigator.pop(context, Settings(size, mines));
                 },
-                child: const Text('Confirm'))
-          ]);
+                child: const Text('Confirm')),
+          )
+        ]);
+  }
 }
