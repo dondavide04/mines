@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mines/routes/game/utils/mkGameBoard.dart';
+import 'package:mines/routes/game/utils/gameBoard.dart';
 import 'package:mines/routes/game/widgets/box.dart';
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
