@@ -1,11 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
+import 'package:quiver/core.dart';
 
 class MatrixIndexes {
   final int x;
   final int y;
 
   const MatrixIndexes(this.x, this.y);
+
+  @override
+  bool operator ==(Object other) =>
+      (other is MatrixIndexes ? (x == other.x && y == other.y) : false);
+
+  @override
+  int get hashCode => hash2(x, y);
 }
 
 extension Matrix<T> on List<List<T>> {
@@ -20,9 +28,7 @@ extension Matrix<T> on List<List<T>> {
   List<MatrixIndexes> aroundIndexes({required int x, required int y}) =>
       mapIndexed((rowIndex, col) => col
           .mapIndexed((colIndex, _) => MatrixIndexes(rowIndex, colIndex))
-          .toList()).toList().around(x: x, y: y).flatten().toList();
-
-  Iterable<T> flatten() => expand((element) => element);
+          .toList()).toList().around(x: x, y: y).flattened.toList();
 }
 
 List<List<Cell>> mkGameBoard(
@@ -43,7 +49,7 @@ List<List<Cell>> mkGameBoard(
   );
   final flatMines = List.filled(totalMines, true, growable: true);
   flatMines.addAll(List.filled(
-      tempBoard.flatten().where((el) => el == null).length - totalMines,
+      tempBoard.flattened.where((el) => el == null).length - totalMines,
       false));
   flatMines.shuffle();
   final numBoard = tempBoard
@@ -52,13 +58,13 @@ List<List<Cell>> mkGameBoard(
       .toList();
   return numBoard
       .mapIndexed((rowIndex, row) => row
-          .mapIndexed((colIndex, isMine) => isMine
-              ? Cell.mine()
-              : Cell.number(numBoard
+          .mapIndexed((colIndex, isMine) => Cell(
+              numBoard
                   .around(x: rowIndex, y: colIndex)
-                  .flatten()
+                  .flattened
                   .where((isMine) => isMine)
-                  .length))
+                  .length,
+              isMine))
           .toList())
       .toList();
 }

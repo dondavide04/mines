@@ -4,10 +4,7 @@ class Cell {
   final bool isMine;
   final int aroundMines;
 
-  Cell.mine()
-      : isMine = true,
-        aroundMines = -1;
-  Cell.number(this.aroundMines) : isMine = false;
+  Cell(this.aroundMines, this.isMine);
 }
 
 class CellWidget extends StatelessWidget {

@@ -71,7 +71,7 @@ class _GameState extends State<Game> {
     if (board![xCoord][yCoord].cell.isMine) {
       // check loosing condition
       _loose();
-    } else if (board!.flatten().where((cell) => cell.isNotVisible()).length ==
+    } else if (board!.flattened.where((cell) => cell.isNotVisible()).length ==
         widget.totalMines) {
       // check winning condition
       _win();
@@ -137,8 +137,7 @@ class _GameState extends State<Game> {
                     child: Image.asset('assets/images/flag.png'),
                     height: 32,
                     padding: const EdgeInsets.all(4)),
-                Text(board
-                        ?.flatten()
+                Text(board?.flattened
                         .where((cell) => cell.isFlagged())
                         .length
                         .toString() ??
@@ -166,7 +165,7 @@ class _GameState extends State<Game> {
                         widget.gameSize,
                         List.filled(
                           widget.gameSize,
-                          StatefulCell(Cell.number(0)),
+                          StatefulCell(Cell(0, false)),
                         ),
                       ))
                   .mapIndexed(
