@@ -42,7 +42,7 @@ class _GameState extends State<Game> {
       context: context,
       builder: (context) => _endDialog('You won'));
 
-  void _loose() => showDialog(
+  void _lose() => showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) => _endDialog('You lost'));
@@ -69,8 +69,8 @@ class _GameState extends State<Game> {
     board![xCoord][yCoord].setVisible();
 
     if (board![xCoord][yCoord].cell.isMine) {
-      // check loosing condition
-      _loose();
+      // check losing condition
+      _lose();
     } else if (board!.flattened.where((cell) => cell.isNotVisible()).length ==
         widget.totalMines) {
       // check winning condition
