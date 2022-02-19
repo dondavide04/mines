@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines/routes.dart';
 import 'package:mines/routes/home/home.dart';
+import 'package:mines/routes/stats/stats.dart';
 
 void main() {
   runApp(const App());
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
       initialRoute: '/',
       routes: {
         Routes.home: (_) => const Home(),
+        Routes.stats: (_) => const Stats(),
       },
     );
   }
