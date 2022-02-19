@@ -5,6 +5,11 @@ class Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Text('stats route'));
+    return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Text('Statistics')),
+      body: const Text('stats route'),
+    );
   }
 }
