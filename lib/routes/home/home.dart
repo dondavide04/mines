@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines/routes.dart';
 import 'package:mines/routes/game/game.dart';
-import 'package:mines/routes/home/widgets/settingsDialog.dart';
+import 'package:mines/routes/home/widgets/settings_dialog.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);

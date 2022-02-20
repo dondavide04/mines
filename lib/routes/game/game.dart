@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mines/routes/game/utils/gameBoard.dart';
+import 'package:mines/database/matches_database.dart';
+import 'package:mines/routes/game/utils/game_board.dart';
 import 'package:mines/routes/game/widgets/box.dart';
 import 'package:collection/collection.dart';
 import 'package:mines/routes/game/widgets/cell.dart';
+import 'package:mines/database/match.dart';
 
 class StatefulCell {
   final Cell cell;
@@ -31,21 +33,42 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   List<List<StatefulCell>>? board;
 
+  Future<Match> _saveMatch({bool win = false, DateTime? endedAt}) =>
+      MatchesDatabase.instance.create(Match(
+          cells: widget.gameSize * widget.gameSize,
+          mines: widget.totalMines,
+          win: win,
+          startedAt: DateTime.now(),
+          endedAt: endedAt));
+
+  @override
+  void initState() {
+    _saveMatch();
+    super.initState();
+  }
+
   void _restart() {
+    _saveMatch();
     setState(() {
       board = null;
     });
   }
 
-  void _win() => showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => _endDialog('You won'));
+  void _win() {
+    _saveMatch(win: true, endedAt: DateTime.now());
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => _endDialog('You won'));
+  }
 
-  void _lose() => showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => _endDialog('You lost'));
+  void _lose() {
+    _saveMatch(win: false, endedAt: DateTime.now());
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => _endDialog('You lost'));
+  }
 
   AlertDialog _endDialog(String title) => AlertDialog(
         title: Text(title),

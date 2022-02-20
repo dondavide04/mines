@@ -1,4 +1,4 @@
-import 'package:mines/routes/game/utils/gameBoard.dart';
+import 'package:mines/routes/game/utils/game_board.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
 

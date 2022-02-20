@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mines/routes/home/home.dart';
-import 'package:mines/routes/home/widgets/settingsDialog.dart';
+import 'package:mines/routes/home/widgets/settings_dialog.dart';
 
 void main() {
   MaterialApp _app() => const MaterialApp(home: Home());
