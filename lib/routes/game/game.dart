@@ -32,14 +32,19 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   List<List<StatefulCell>>? board;
+  Match? match;
 
-  Future<Match> _saveMatch({bool win = false, DateTime? endedAt}) =>
-      MatchesDatabase.instance.create(Match(
-          cells: widget.gameSize * widget.gameSize,
-          mines: widget.totalMines,
-          win: win,
-          startedAt: DateTime.now(),
-          endedAt: endedAt));
+  Future<void> _saveMatch() => MatchesDatabase.instance
+          .create(Match(
+              cells: widget.gameSize * widget.gameSize,
+              mines: widget.totalMines,
+              win: false,
+              startedAt: DateTime.now()))
+          .then((match) {
+        setState(() {
+          this.match = match;
+        });
+      });
 
   @override
   void initState() {
@@ -55,7 +60,8 @@ class _GameState extends State<Game> {
   }
 
   void _win() {
-    _saveMatch(win: true, endedAt: DateTime.now());
+    MatchesDatabase.instance
+        .update(match!.copy(endedAt: DateTime.now(), win: true));
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -63,7 +69,8 @@ class _GameState extends State<Game> {
   }
 
   void _lose() {
-    _saveMatch(win: false, endedAt: DateTime.now());
+    MatchesDatabase.instance
+        .update(match!.copy(endedAt: DateTime.now(), win: false));
     showDialog(
         barrierDismissible: false,
         context: context,

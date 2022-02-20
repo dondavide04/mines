@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mines/database/matches_database.dart';
 import 'package:mines/routes.dart';
 import 'package:mines/routes/game/game.dart';
 import 'package:mines/routes/home/widgets/settings_dialog.dart';
@@ -35,6 +36,10 @@ class Home extends StatelessWidget {
               ElevatedButton(
                 child: const Text('Statistics'),
                 onPressed: () => Navigator.pushNamed(context, Routes.stats),
+              ),
+              ElevatedButton(
+                child: const Text('clear'),
+                onPressed: () => MatchesDatabase.instance.deleteAll(),
               )
             ],
           )),

@@ -75,4 +75,9 @@ class MatchesDatabase {
     return db
         .delete(tableMatches, where: '${MatchFields.id} = ?', whereArgs: [id]);
   }
+
+  Future<int> deleteAll() async {
+    final db = await instance.database;
+    return db.delete(tableMatches);
+  }
 }
