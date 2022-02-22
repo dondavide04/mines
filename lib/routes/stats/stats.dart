@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines/database/matches_database.dart';
 import 'package:mines/database/match.dart';
-import 'package:mines/routes/stats/widgets/match_item.dart';
+import 'package:mines/routes/stats/widgets/match_table.dart';
 
 class Stats extends StatelessWidget {
   const Stats({Key? key}) : super(key: key);
@@ -14,18 +14,19 @@ class Stats extends StatelessWidget {
           title: const Text('Statistics')),
       body: Container(
         padding: const EdgeInsets.all(24),
-        child: FutureBuilder<List<Match>>(
-          future: MatchesDatabase.instance.readAll(),
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (_, position) =>
-                        MatchItem(match: snapshot.data![position]))
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
+        child: InteractiveViewer(
+          scaleEnabled: false,
+          constrained: false,
+          child: FutureBuilder<List<Match>>(
+            future: MatchesDatabase.instance.readAll(),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? MatchTable(data: snapshot.data!)
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    );
+            },
+          ),
         ),
       ),
     );
