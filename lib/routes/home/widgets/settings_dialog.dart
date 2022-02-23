@@ -19,7 +19,8 @@ class SettingsDialog extends StatefulWidget {
 class _SettingsDialogState extends State<SettingsDialog> {
   int size = 8;
   int mines = 13;
-  get maxMines => (size * size * 30 / 100).round();
+  int get maxMines => (size * size * 30 / 100).round();
+  int get minMines => (size * size * 10 / 100).round();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,9 @@ class _SettingsDialogState extends State<SettingsDialog> {
                 if (mines > maxMines) {
                   (mines = maxMines);
                 }
+                if (mines < minMines) {
+                  (mines = minMines);
+                }
               }),
               min: 5,
               max: 15,
@@ -46,7 +50,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
               onChanged: (mines) => setState(() {
                 this.mines = mines.toInt();
               }),
-              min: 1,
+              min: minMines.toDouble(),
               max: maxMines.toDouble(),
             )
           ],
