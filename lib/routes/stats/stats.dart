@@ -14,19 +14,20 @@ class Stats extends StatelessWidget {
           title: const Text('Statistics')),
       body: Container(
         padding: const EdgeInsets.all(24),
-        child: InteractiveViewer(
-          scaleEnabled: false,
-          constrained: false,
-          child: FutureBuilder<List<Match>>(
-            future: MatchesDatabase.instance.readAll(),
-            builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? MatchTable(data: snapshot.data!)
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    );
-            },
-          ),
+        child: Center(
+          heightFactor: 1,
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: FutureBuilder<List<Match>>(
+                future: MatchesDatabase.instance.readAll(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? MatchTable(data: snapshot.data!)
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                },
+              )),
         ),
       ),
     );

@@ -13,8 +13,8 @@ class MatchTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return DataTable(
         columns: const <DataColumn>[
+          DataColumn(label: Text('')),
           DataColumn(label: Text('Date')),
-          DataColumn(label: Text('Outcome')),
           DataColumn(label: Text('Time')),
           DataColumn(label: Text('Mines %'))
         ],
@@ -23,10 +23,10 @@ class MatchTable extends StatelessWidget {
             .map((m) => DataRow(
                   cells: <DataCell>[
                     DataCell(
-                      Text(DateFormat('MMM, d').format(m.startedAt)),
+                      Text(m.win ? '🏆' : ''),
                     ),
                     DataCell(
-                      Text(m.win ? 'Won' : 'Lost'),
+                      Text(DateFormat('MMM, d').format(m.startedAt)),
                     ),
                     DataCell(
                       Text(_formatTime(m.endedAt!.difference(m.startedAt))),

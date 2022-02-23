@@ -178,42 +178,46 @@ class _GameState extends State<Game> {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+        padding: const EdgeInsets.all(24),
         alignment: Alignment.center,
-        child: InteractiveViewer(
-          scaleEnabled: false,
-          constrained: false,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).primaryColor)),
-            child: Wrap(
-              direction: Axis.vertical,
-              spacing: 8,
-              children: (board ??
-                      List.filled(
-                        widget.gameSize,
-                        List.filled(
-                          widget.gameSize,
-                          StatefulCell(Cell(0, false)),
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).primaryColor)),
+                child: Wrap(
+                  direction: Axis.vertical,
+                  spacing: 8,
+                  children: (board ??
+                          List.filled(
+                            widget.gameSize,
+                            List.filled(
+                              widget.gameSize,
+                              StatefulCell(Cell(0, false)),
+                            ),
+                          ))
+                      .mapIndexed(
+                        (rowIndex, row) => Wrap(
+                          spacing: 8,
+                          children: row
+                              .mapIndexed((colIndex, statefulCell) => Box(
+                                    content:
+                                        CellWidget(cell: statefulCell.cell),
+                                    xCoord: rowIndex,
+                                    yCoord: colIndex,
+                                    onTap: _onTapCell,
+                                    onLongPress: _onLongPressCell,
+                                    status: statefulCell.status,
+                                  ))
+                              .toList(),
                         ),
-                      ))
-                  .mapIndexed(
-                    (rowIndex, row) => Wrap(
-                      spacing: 8,
-                      children: row
-                          .mapIndexed((colIndex, statefulCell) => Box(
-                                content: CellWidget(cell: statefulCell.cell),
-                                xCoord: rowIndex,
-                                yCoord: colIndex,
-                                onTap: _onTapCell,
-                                onLongPress: _onLongPressCell,
-                                status: statefulCell.status,
-                              ))
-                          .toList(),
-                    ),
-                  )
-                  .toList(),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
           ),
         ),
