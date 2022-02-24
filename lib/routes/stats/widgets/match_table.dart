@@ -12,6 +12,7 @@ class MatchTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DataTable(
+        columnSpacing: 40,
         columns: const <DataColumn>[
           DataColumn(label: Text('')),
           DataColumn(label: Text('Date')),
