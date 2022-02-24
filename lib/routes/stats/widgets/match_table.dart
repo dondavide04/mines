@@ -7,7 +7,7 @@ class MatchTable extends StatelessWidget {
   const MatchTable({Key? key, required this.data}) : super(key: key);
 
   String _formatTime(Duration d) =>
-      '${d.inMinutes.remainder(60).toString().padLeft(2, '0')}:${d.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+      '${d.inMinutes.toString().padLeft(2, '0')}:${d.inSeconds.remainder(60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
