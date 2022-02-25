@@ -25,21 +25,28 @@ class Stats extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TotalScoreBox(
-                                title: 'Total won',
-                                total: snapshot.data!.fold(
-                                    0,
-                                    (previousValue, element) => element.win
-                                        ? previousValue + 1
-                                        : previousValue)),
-                            TotalScoreBox(
-                                title: 'Total lost',
-                                total: snapshot.data!.fold(
-                                    0,
-                                    (previousValue, element) =>
-                                        !element.win && element.endedAt != null
-                                            ? previousValue + 1
-                                            : previousValue))
+                            Expanded(
+                              child: TotalScoreBox(
+                                  type: Type.won,
+                                  title: 'Total won',
+                                  total: snapshot.data!.fold(
+                                      0,
+                                      (previousValue, element) => element.win
+                                          ? previousValue + 1
+                                          : previousValue)),
+                            ),
+                            Expanded(
+                              child: TotalScoreBox(
+                                  type: Type.lost,
+                                  title: 'Total lost',
+                                  total: snapshot.data!.fold(
+                                      0,
+                                      (previousValue, element) =>
+                                          !element.win &&
+                                                  element.endedAt != null
+                                              ? previousValue + 1
+                                              : previousValue)),
+                            )
                           ],
                         ),
                         const SizedBox(height: 56),
