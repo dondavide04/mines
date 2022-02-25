@@ -60,7 +60,8 @@ class MatchesDatabase {
 
   Future<List<Match>> readAll() async {
     final db = await instance.database;
-    final maps = await db.query(tableMatches, columns: MatchFields.values);
+    final maps = await db.query(tableMatches,
+        columns: MatchFields.values, orderBy: '${MatchFields.startedAt} DESC');
     return maps.map(Match.fromMap).toList();
   }
 
